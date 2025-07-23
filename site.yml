@@ -5,9 +5,6 @@
   gather_facts: true
 
   tasks:
-    - name: Ensure ping to all debian servers
-      ansible.builtin.ping:
-
     - name: Display hostname and Debian version
       ansible.builtin.debug:
         msg: "Hello, world from {{ inventory_hostname }} running {{ ansible_distribution }} {{ ansible_distribution_version }}!"
