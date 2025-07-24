@@ -7,10 +7,10 @@
   tasks:
     - name: Display hostname and Debian version
       ansible.builtin.debug:
-        msg: "Hello, world from {{ inventory_hostname }} running {{ ansible_distribution }} {{ ansible_distribution_version }}!"
+        msg: "{{ inventory_hostname }} running {{ ansible_distribution }} {{ ansible_distribution_version }}!"
 
     - name: Touch File
       ansible.builtin.copy:
         dest: /tmp/ansible_was_here.txt
-        content: "Hello from {{ inventory_hostname }}! Ansible ran successfully on {{ ansible_date_time.date }}.\n"
+        content: "{{ inventory_hostname }}! Ansible ran successfully on {{ ansible_date_time.date }}.\n"
         mode: "0644"
