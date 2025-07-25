@@ -5,9 +5,7 @@
   vars:
     proxmox_nodes:
       - host: 192.168.1.5
-        username: jrogers
       - host: 192.168.1.6
-        username: jrogers
     inventory_file: inventory/proxmox_inventory.ini
   tasks:
     - name: Get Proxmox VM facts

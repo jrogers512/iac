@@ -1,7 +1,7 @@
 {%- set proxmox = 'proxmox' -%}
 [{{ proxmox }}]
 {% for node in proxmox_nodes %}
-{{ node.host }} ansible_host={{ node.host }} ansible_user={{ node.username }}
+{{ node.host }} ansible_host={{ node.host }}
 {% endfor %}
 
 {% if kvms %}
