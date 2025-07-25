@@ -1,0 +1,29 @@
+{%- set proxmox = 'proxmox' -%}
+[{{ proxmox }}]
+{% for node in proxmox_nodes %}
+{{ node.host }} ansible_host={{ node.host }} ansible_user={{ node.username }}
+{% endfor %}
+
+{% if kvms %}
+[kvms]
+{% for vm in kvms %}
+{{ vm.name }} ansible_host={{ vm.ip }}
+  {% if vm.labels %}
+  {% for label in vm.labels.split(',') %}
+{{ vm.name }} ansible_{{ label.split('=')[0] }}={{ label.split('=')[1] }}
+  {% endfor %}
+  {% endif %}
+{% endfor %}
+{% endif %}
+
+{% if lxcs %}
+[lxcs]
+{% for lxc in lxcs %}
+{{ lxc.name }} ansible_host={{ lxc.ip }}
+  {% if lxc.labels %}
+  {% for label in lxc.labels.split(',') %}
+{{ lxc.name }} ansible_{{ label.split('=')[0] }}={{ label.split('=')[1] }}
+  {% endfor %}
+  {% endif %}
+{% endfor %}
+{% endif %}

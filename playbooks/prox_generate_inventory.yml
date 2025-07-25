@@ -1,0 +1,37 @@
+---
+- name: Generate Proxmox Inventory
+  hosts: localhost
+  gather_facts: false
+  vars:
+    proxmox_nodes:
+      - host: 192.168.1.5
+        username: jrogers
+      - host: 192.168.1.6
+        username: jrogers
+    inventory_file: inventory/proxmox_inventory.ini
+  tasks:
+    - name: Get Proxmox VM facts
+      community.general.proxmox_kvm:
+        proxmox_host: "{{ item.host }}"
+        username: "{{ item.username }}"
+        password: "" # Assuming SSH key authentication
+        validate_certs: false
+      loop: "{{ proxmox_nodes }}"
+      register: kvm_facts
+
+    - name: Get Proxmox LXC facts
+      community.general.proxmox_lxc:
+        proxmox_host: "{{ item.host }}"
+        username: "{{ item.username }}"
+        password: "" # Assuming SSH key authentication
+        validate_certs: false
+      loop: "{{ proxmox_nodes }}"
+      register: lxc_facts
+
+    - name: Generate inventory file
+      template:
+        src: templates/proxmox_inventory.ini.j2
+        dest: "{{ inventory_file }}"
+      vars:
+        kvms: "{{ kvm_facts.results | map(attribute='vms') | flatten }}"
+        lxcs: "{{ lxc_facts.results | map(attribute='containers') | flatten }}"
