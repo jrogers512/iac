@@ -2,4 +2,3 @@
 collections:
   - name: community.general
   - name: community.proxmox
-    version: "4.1.0"
