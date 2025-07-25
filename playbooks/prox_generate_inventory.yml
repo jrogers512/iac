@@ -5,11 +5,6 @@
   vars:
     inventory_file: inventory/proxmox_inventory.ini
   tasks:
-    - name: Install community.general collection
-      ansible.builtin.command: ansible-galaxy collection install community.general
-      register: collection_install
-      changed_when: "'Successfully installed' in collection_install.stdout"
-
     - name: Get Proxmox VM facts
       community.general.proxmox_kvm:
         proxmox_host: "{{ ansible_host }}"
