@@ -1,29 +1,24 @@
 ---
 - name: Generate Proxmox Inventory
-  hosts: localhost
+  hosts: pve
   gather_facts: false
   vars:
-    proxmox_nodes:
-      - host: 192.168.1.5
-      - host: 192.168.1.6
     inventory_file: inventory/proxmox_inventory.ini
   tasks:
     - name: Get Proxmox VM facts
       community.general.proxmox_kvm:
-        proxmox_host: "{{ item.host }}"
-        username: "{{ item.username }}"
+        proxmox_host: "{{ ansible_host }}"
+        username: "{{ ansible_user }}"
         password: "" # Assuming SSH key authentication
         validate_certs: false
-      loop: "{{ proxmox_nodes }}"
       register: kvm_facts
 
     - name: Get Proxmox LXC facts
       community.general.proxmox_lxc:
-        proxmox_host: "{{ item.host }}"
-        username: "{{ item.username }}"
+        proxmox_host: "{{ ansible_host }}"
+        username: "{{ ansible_user }}"
         password: "" # Assuming SSH key authentication
         validate_certs: false
-      loop: "{{ proxmox_nodes }}"
       register: lxc_facts
 
     - name: Generate inventory file

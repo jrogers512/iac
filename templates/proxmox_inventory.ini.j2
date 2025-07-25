@@ -1,7 +1,7 @@
 {%- set proxmox = 'proxmox' -%}
 [{{ proxmox }}]
-{% for node in proxmox_nodes %}
-{{ node.host }} ansible_host={{ node.host }}
+{% for host in groups['pve'] %}
+{{ host }} ansible_host={{ hostvars[host]['ansible_host'] }}
 {% endfor %}
 
 {% if kvms %}
