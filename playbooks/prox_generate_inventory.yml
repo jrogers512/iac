@@ -6,7 +6,7 @@
     inventory_file: inventory/proxmox_inventory.ini
   tasks:
     - name: Get Proxmox VM facts
-      community.general.proxmox_kvm:
+      community.proxmox.proxmox_kvm:
         proxmox_host: "{{ ansible_host }}"
         username: "{{ ansible_user }}"
         password: "" # Assuming SSH key authentication
@@ -14,7 +14,7 @@
       register: kvm_facts
 
     - name: Get Proxmox LXC facts
-      community.general.proxmox_lxc:
+      community.proxmox.proxmox_lxc:
         proxmox_host: "{{ ansible_host }}"
         username: "{{ ansible_user }}"
         password: "" # Assuming SSH key authentication
