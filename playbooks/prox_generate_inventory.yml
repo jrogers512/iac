@@ -14,11 +14,12 @@
       register: kvm_facts
 
     - name: Get Proxmox LXC facts
-      community.general.proxmox_lxc:
+      community.general.proxmox:
         proxmox_host: "{{ ansible_host }}"
         username: "{{ ansible_user }}"
         password: "" # Assuming SSH key authentication
         validate_certs: false
+        type: lxc
       register: lxc_facts
 
     - name: Generate inventory file
