@@ -10,8 +10,8 @@
       - name: pve2
         host: 192.168.1.6
   tasks:
-    - name: Test Proxmox API connection
-      community.general.proxmox_kvm:
+    - name: Get Proxmox cluster resources
+      community.general.proxmox:
         api_host: "{{ item.host }}"
         api_user: "{{ proxmox_api_user | default('root@pam') }}"
         api_password: "{{ proxmox_api_password | default(omit) }}"
@@ -19,19 +19,16 @@
         api_token_secret: "{{ proxmox_api_token_secret | default(omit) }}"
         validate_certs: false
         node: "{{ item.name }}"
-        state: current
       loop: "{{ pve_hosts }}"
-      register: kvm_facts
-      ignore_errors: yes
+      register: proxmox_facts
 
     - name: Debug API response
       debug:
-        var: kvm_facts
+        var: proxmox_facts
 
     - name: Generate inventory file
       template:
-        src: templates/proxmox_inventory.ini.j2
+        src: ../templates/proxmox_inventory.ini.j2
         dest: "{{ inventory_file }}"
       vars:
-        kvms: "{{ kvm_facts.results | map(attribute='vms') | flatten }}"
-        lxcs: "{{ lxc_facts.results | map(attribute='containers') | flatten }}"
+        proxmox_data: "{{ proxmox_facts.results }}"
