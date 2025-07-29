@@ -7,17 +7,21 @@
   tasks:
     - name: Get Proxmox VM facts
       community.general.proxmox_kvm:
-        proxmox_host: "{{ ansible_host }}"
-        username: "{{ ansible_user }}"
-        password: "" # Assuming SSH key authentication
+        api_host: "{{ ansible_host }}"
+        api_user: "{{ proxmox_api_user | default('root@pam') }}"
+        api_password: "{{ proxmox_api_password | default(omit) }}"
+        api_token_id: "{{ proxmox_api_token_id | default(omit) }}"
+        api_token_secret: "{{ proxmox_api_token_secret | default(omit) }}"
         validate_certs: false
       register: kvm_facts
 
     - name: Get Proxmox LXC facts
       community.general.proxmox:
-        proxmox_host: "{{ ansible_host }}"
-        username: "{{ ansible_user }}"
-        password: "" # Assuming SSH key authentication
+        api_host: "{{ ansible_host }}"
+        api_user: "{{ proxmox_api_user | default('root@pam') }}"
+        api_password: "{{ proxmox_api_password | default(omit) }}"
+        api_token_id: "{{ proxmox_api_token_id | default(omit) }}"
+        api_token_secret: "{{ proxmox_api_token_secret | default(omit) }}"
         validate_certs: false
         type: lxc
       register: lxc_facts
