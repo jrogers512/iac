@@ -10,7 +10,7 @@
       - name: pve2
         host: 192.168.1.6
   tasks:
-    - name: Get Proxmox VM facts
+    - name: Test Proxmox API connection
       community.general.proxmox_kvm:
         api_host: "{{ item.host }}"
         api_user: "{{ proxmox_api_user | default('root@pam') }}"
@@ -18,20 +18,15 @@
         api_token_id: "{{ proxmox_api_token_id | default(omit) }}"
         api_token_secret: "{{ proxmox_api_token_secret | default(omit) }}"
         validate_certs: false
+        node: "{{ item.name }}"
+        state: current
       loop: "{{ pve_hosts }}"
       register: kvm_facts
+      ignore_errors: yes
 
-    - name: Get Proxmox LXC facts
-      community.general.proxmox:
-        api_host: "{{ item.host }}"
-        api_user: "{{ proxmox_api_user | default('root@pam') }}"
-        api_password: "{{ proxmox_api_password | default(omit) }}"
-        api_token_id: "{{ proxmox_api_token_id | default(omit) }}"
-        api_token_secret: "{{ proxmox_api_token_secret | default(omit) }}"
-        validate_certs: false
-        type: lxc
-      loop: "{{ pve_hosts }}"
-      register: lxc_facts
+    - name: Debug API response
+      debug:
+        var: kvm_facts
 
     - name: Generate inventory file
       template:
