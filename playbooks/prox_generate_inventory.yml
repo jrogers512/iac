@@ -1,0 +1,34 @@
+---
+- name: Generate Proxmox Inventory
+  hosts: localhost
+  gather_facts: false
+  vars:
+    inventory_file: inventory/proxmox_inventory.ini
+    pve_hosts:
+      - name: pve1
+        host: 192.168.1.5
+      - name: pve2
+        host: 192.168.1.6
+  tasks:
+    - name: Get Proxmox cluster resources
+      community.general.proxmox:
+        api_host: "{{ item.host }}"
+        api_user: "{{ proxmox_api_user | default('root@pam') }}"
+        api_password: "{{ proxmox_api_password | default(omit) }}"
+        api_token_id: "{{ proxmox_api_token_id | default(omit) }}"
+        api_token_secret: "{{ proxmox_api_token_secret | default(omit) }}"
+        validate_certs: false
+        node: "{{ item.name }}"
+      loop: "{{ pve_hosts }}"
+      register: proxmox_facts
+
+    - name: Debug API response
+      debug:
+        var: proxmox_facts
+
+    - name: Generate inventory file
+      template:
+        src: ../templates/proxmox_inventory.ini.j2
+        dest: "{{ inventory_file }}"
+      vars:
+        proxmox_data: "{{ proxmox_facts.results }}"

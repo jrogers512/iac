@@ -1,0 +1,14 @@
+hosts:
+  grocy:
+    hostname: grocy
+    host_id: 939
+    root_password: rootpass123
+    url: https://raw.githubusercontent.com/community-scripts/ProxmoxVE/main/ct/grocy.sh
+    net_type: static
+    static_ip: 192.168.1.39/24
+    gateway: 192.168.1.1
+    pve: 192.168.1.5
+    disk_size: 2
+    cpu_cores: 2
+    ram_size: 512
+    template: ubuntu-22.04-standard_22.04-1_amd64.tar.zst

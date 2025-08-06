@@ -1,0 +1,29 @@
+{%- set proxmox = 'proxmox' -%}
+[{{ proxmox }}]
+{% for host in groups['pve'] %}
+{{ host }} ansible_host={{ hostvars[host]['ansible_host'] }}
+{% endfor %}
+
+{% if kvms %}
+[kvms]
+{% for vm in kvms %}
+{{ vm.name }} ansible_host={{ vm.ip }}
+  {% if vm.labels %}
+  {% for label in vm.labels.split(',') %}
+{{ vm.name }} ansible_{{ label.split('=')[0] }}={{ label.split('=')[1] }}
+  {% endfor %}
+  {% endif %}
+{% endfor %}
+{% endif %}
+
+{% if lxcs %}
+[lxcs]
+{% for lxc in lxcs %}
+{{ lxc.name }} ansible_host={{ lxc.ip }}
+  {% if lxc.labels %}
+  {% for label in lxc.labels.split(',') %}
+{{ lxc.name }} ansible_{{ label.split('=')[0] }}={{ label.split('=')[1] }}
+  {% endfor %}
+  {% endif %}
+{% endfor %}
+{% endif %}
