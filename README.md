@@ -1,2 +1,0 @@
-# iac
-home lab configuration

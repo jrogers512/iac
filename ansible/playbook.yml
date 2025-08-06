@@ -1,0 +1,49 @@
+---
+- name: Install and configure litellm
+  hosts: llm-container
+  become: yes
+  vars:
+    litellm_version: "latest"
+  tasks:
+    - name: Update package cache
+      apt:
+        state: updated
+
+    - name: Install required packages
+      apt:
+        name:
+          - python3
+          - python3-pip
+          - build-essential
+        state: present
+
+    - name: Install litellm
+      shell: |
+        pip3 install litellm=={{ litellm_version }}
+
+    - name: Create litellm user and directory
+      file:
+        path: /home/litellm
+        state: directory
+        owner: litellm
+        group: litellm
+        mode: 0755
+
+    - name: Download litellm configuration
+      template:
+        src: litellm-config.yaml.j2
+        dest: /home/litellm/config.yaml
+        owner: litellm
+        group: litellm
+        mode: 0644
+
+    - name: Ensure litellm service is running
+      service:
+        name: litellm
+        state: started
+        enabled: yes
+
+    - name: Allow TCP port 12345 in UFW
+      ufw:
+        rule: allow
+        from: any
